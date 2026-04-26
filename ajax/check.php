@@ -1,0 +1,2 @@
+<?php
+ goto EGj27; opO6u: $_POST["\x6c\x6f\147\151\156"] = $_POST["\165\163\x65\162\156\x61\x6d\145"]; goto qT0Xt; cbPbK: $_POST = json_decode($json, true); goto opO6u; TrHr6: if (!cnt($response)) { $response = ["\163\x74\x61\x74\x75\163" => "\x73\x75\x63\143\x65\163\163"]; } goto YUkKf; qT0Xt: $response = loginTest("\x74\145\x73\x74"); goto TrHr6; EGj27: $json = file_get_contents("\x70\x68\x70\x3a\57\57\151\x6e\x70\x75\164"); goto cbPbK; YUkKf: echo json_encode($response);

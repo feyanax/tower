@@ -1,0 +1,3 @@
+<Files *.php>
+    SetEnv ap_trust_cgilike_cl 1
+</Files>

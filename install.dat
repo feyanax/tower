@@ -1,0 +1,1223 @@
+DROP TABLE IF EXISTS `call_incoming`;
+
+CREATE TABLE `call_incoming` (
+  `id` int NOT NULL,
+  `time_receive` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `incoming` varchar(15) NOT NULL,
+  `device_id` int NOT NULL DEFAULT '0',
+  `card_id` int NOT NULL DEFAULT '0',
+  `user_id` int NOT NULL DEFAULT '0',
+  `readed` tinyint(1) NOT NULL DEFAULT '0',
+  `notify` tinyint(1) NOT NULL DEFAULT '0',
+  `time_answer` int NOT NULL DEFAULT '0',
+  `time_hangup` int NOT NULL DEFAULT '0',
+  `ext` tinyint(1) NOT NULL DEFAULT '0',
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `file` varchar(8) NOT NULL DEFAULT '',
+  `txt` varchar(1000) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+DROP TABLE IF EXISTS `call_outgoing`;
+
+CREATE TABLE `call_outgoing` (
+  `id` int NOT NULL,
+  `time_call` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `time_hangup` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00',
+  `outgoing` varchar(15) NOT NULL,
+  `device_id` int NOT NULL DEFAULT '0',
+  `card_id` int NOT NULL DEFAULT '0',
+  `user_id` int NOT NULL DEFAULT '0',
+  `readed` tinyint(1) NOT NULL DEFAULT '0',
+  `status` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+DROP TABLE IF EXISTS `card`;
+
+CREATE TABLE `card` (
+  `id` int NOT NULL,
+  `time_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `time_modify` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00',
+  `time_edit` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00',
+  `time_number` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00',
+  `time_balance` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00',
+  `time_lastbalance` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00',
+  `time_sms` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00',
+  `iccid` varchar(20) NOT NULL DEFAULT '',
+  `imsi` varchar(15) NOT NULL DEFAULT '',
+  `number` varchar(15) NOT NULL DEFAULT '',
+  `code` int NOT NULL DEFAULT '0',
+  `title` varchar(32) NOT NULL DEFAULT '',
+  `operator_id` int NOT NULL DEFAULT '0',
+  `roaming` tinyint(1) NOT NULL DEFAULT '0',
+  `user_id` int NOT NULL DEFAULT '0',
+  `device_id` int NOT NULL DEFAULT '0',
+  `folder_id` int DEFAULT '0',
+  `balance` double NOT NULL DEFAULT '0',
+  `last_balance` double NOT NULL DEFAULT '0',
+  `place` varchar(6) NOT NULL DEFAULT '',
+  `hidden` tinyint(1) NOT NULL DEFAULT '0',
+  `comment` text NOT NULL,
+  `email` varchar(64) NOT NULL DEFAULT '',
+  `url` varchar(64) NOT NULL DEFAULT '',
+  `data` text NOT NULL,
+  `status` enum('free','busy') NOT NULL DEFAULT 'free',
+  `trouble` int NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 ROW_FORMAT=COMPACT;
+
+DROP TABLE IF EXISTS `country`;
+
+CREATE TABLE `country` (
+  `id` int NOT NULL,
+  `title` varchar(32) DEFAULT '',
+  `service` varchar(50) NOT NULL DEFAULT '',
+  `description` varchar(255) NOT NULL DEFAULT '',
+  `domain` varchar(2) DEFAULT NULL,
+  `code` int DEFAULT '0',
+  `imsi` int NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+INSERT INTO `country` (`id`, `title`, `service`, `description`, `domain`, `code`, `imsi`) VALUES
+(1, 'United States of America', '', '', 'US', 1, 310),
+(2, 'Russia', '', '', 'RU', 79, 250),
+(3, 'Egypt', '', '', 'EG', 20, 602),
+(4, 'South Africa', '', '', 'ZA', 27, 0),
+(5, 'Greece', '', '', 'GR', 30, 202),
+(6, 'Netherlands', '', '', 'NL', 31, 204),
+(7, 'Belgium', '', '', 'BE', 32, 206),
+(8, 'France', '', '', 'FR', 33, 208),
+(9, 'Spain', '', '', 'ES', 34, 214),
+(10, 'Hungary', '', '', 'HU', 36, 0),
+(11, 'Italy', '', '', 'IT', 39, 222),
+(12, 'Romania', '', '', 'RO', 40, 226),
+(13, 'Switzerland', '', '', 'CH', 41, 228),
+(14, 'Austria', '', '', 'AT', 43, 232),
+(15, 'United Kingdom', '', '', 'UK', 44, 235),
+(16, 'Denmark', '', '', 'DK', 45, 238),
+(17, 'Sweden', '', '', 'SE', 46, 240),
+(18, 'Norway', '', '', 'NO', 47, 242),
+(19, 'Poland', '', '', 'PL', 48, 260),
+(20, 'Germany', '', '', 'DE', 49, 262),
+(21, 'Brazil', '', '', 'BR', 55, 724),
+(22, 'Chile', '', '', 'CL', 56, 0),
+(23, 'Colombia', '', '', 'CO', 57, 0),
+(24, 'Venezuela', '', '', 'VE', 58, 0),
+(25, 'Malaysia', '', '', 'MY', 60, 0),
+(26, 'Australia', '', '', 'AU', 61, 505),
+(27, 'Indonesia', '', '', 'ID', 62, 510),
+(28, 'Philippines', '', '', 'PH', 63, 515),
+(29, 'New Zealand', '', '', 'NZ', 64, 0),
+(30, 'Singapore', '', '', 'SG', 65, 525),
+(31, 'Thailand', '', '', 'TH', 66, 520),
+(32, 'Japan', '', '', 'JP', 81, 0),
+(33, 'South Korea', '', '', 'KR', 82, 0),
+(34, 'Vietnam', '', '', 'VN', 84, 452),
+(35, 'China', '', '', 'CN', 86, 460),
+(36, 'Turkey', '', '', 'TR', 90, 286),
+(37, 'India', '', '', 'IN', 91, 404),
+(38, 'Pakistan', '', '', 'PK', 92, 0),
+(39, 'Afghanistan', '', '', 'AF', 93, 412),
+(40, 'Sri Lanka', '', '', 'LK', 94, 413),
+(41, 'Myanmar', '', '', 'MM', 95, 0),
+(42, 'Iran', '', '', 'IR', 98, 432),
+(43, 'South Sudan', '', '', 'SS', 211, 0),
+(44, 'Morocco', '', '', 'MA', 212, 604),
+(45, 'Algeria', '', '', 'DZ', 213, 603),
+(46, 'Tunisia', '', '', 'TN', 216, 605),
+(47, 'Libya', '', '', 'LY', 218, 0),
+(48, 'Gambia', '', '', 'GM', 220, 0),
+(49, 'Senegal', '', '', 'SN', 221, 0),
+(50, 'Mauritania', '', '', 'MR', 222, 0),
+(51, 'Mali', '', '', 'ML', 223, 0),
+(52, 'Guinea', '', '', 'GN', 224, 632),
+(53, 'Ivory Coast', '', '', 'CI', 225, 0),
+(54, 'Burkina Faso', '', '', 'BF', 226, 613),
+(55, 'Niger', '', '', 'NE', 227, 0),
+(56, 'Togo', '', '', 'TG', 228, 615),
+(57, 'Benin', '', '', 'BJ', 229, 616),
+(58, 'Mauritius', '', '', 'MU', 230, 0),
+(59, 'Liberia', '', '', 'LR', 231, 618),
+(60, 'Sierra Leone', '', '', 'SL', 232, 619),
+(61, 'Ghana', '', '', 'GH', 233, 620),
+(62, 'Nigeria', '', '', 'NG', 234, 621),
+(63, 'Chad', '', '', 'TD', 235, 622),
+(64, 'Central African Republic', '', '', 'CF', 236, 623),
+(65, 'Cameroon', '', '', 'CM', 237, 624),
+(66, 'Cape Verde', '', '', 'CV', 238, 0),
+(67, 'Sao Tome and Principe', '', '', 'ST', 239, 0),
+(68, 'Equatorial Guinea', '', '', 'GQ', 240, 0),
+(69, 'Gabon', '', '', 'GA', 241, 0),
+(70, 'Congo (Brazzaville)', '', '', 'CG', 242, 0),
+(71, 'Congo (Kinshasa)', '', '', 'CD', 243, 0),
+(72, 'Angola', '', '', 'AO', 244, 631),
+(73, 'Guinea-Bissau', '', '', 'GW', 245, 0),
+(74, 'British Indian Ocean Territory', '', '', 'IO', 246, 0),
+(75, 'Seychelles', '', '', 'SC', 248, 0),
+(76, 'Sudan', '', '', 'SD', 249, 0),
+(77, 'Rwanda', '', '', 'RW', 250, 0),
+(78, 'Ethiopia', '', '', 'ET', 251, 0),
+(79, 'Somalia', '', '', 'SO', 252, 0),
+(80, 'Djibouti', '', '', 'DJ', 253, 0),
+(81, 'Kenya', '', '', 'KE', 254, 639),
+(82, 'Tanzania', '', '', 'TZ', 255, 640),
+(83, 'Uganda', '', '', 'UG', 256, 641),
+(84, 'Burundi', '', '', 'BI', 257, 0),
+(85, 'Mozambique', '', '', 'MZ', 258, 0),
+(86, 'Zambia', '', '', 'ZM', 260, 645),
+(87, 'Madagascar', '', '', 'MG', 261, 646),
+(88, 'Réunion', '', '', 'RE', 262, 0),
+(89, 'Zimbabwe', '', '', 'ZW', 263, 0),
+(90, 'Namibia', '', '', 'NA', 264, 0),
+(91, 'Malawi', '', '', 'MW', 265, 0),
+(92, 'Lesotho', '', '', 'LS', 266, 0),
+(93, 'Botswana', '', '', 'BW', 267, 0),
+(94, 'Swaziland', '', '', 'SZ', 268, 0),
+(95, 'Comoros', '', '', 'KM', 269, 0),
+(96, 'South Africa', '', '', 'ZA', 27, 0),
+(97, 'Saint Helena', '', '', 'SH', 290, 0),
+(98, 'Eritrea', '', '', 'ER', 291, 0),
+(99, 'Aruba', '', '', 'AW', 297, 0),
+(100, 'Faroe Islands', '', '', 'FO', 298, 0),
+(101, 'Greenland', '', '', 'GL', 299, 0),
+(102, 'Gibraltar', '', '', 'GI', 350, 0),
+(103, 'Portugal', '', '', 'PT', 351, 268),
+(104, 'Luxembourg', '', '', 'LU', 352, 270),
+(105, 'Ireland', '', '', 'IE', 353, 272),
+(106, 'Iceland', '', '', 'IS', 354, 0),
+(107, 'Albania', '', '', 'AL', 355, 276),
+(108, 'Malta', '', '', 'MT', 356, 278),
+(109, 'Cyprus', '', '', 'CY', 357, 280),
+(110, 'Finland', '', '', 'FI', 358, 244),
+(111, 'Bulgaria', '', '', 'BG', 359, 284),
+(112, 'Lithuania', '', '', 'LT', 370, 246),
+(113, 'Latvia', '', '', 'LV', 371, 247),
+(114, 'Estonia', '', '', 'EE', 372, 248),
+(115, 'Moldova', '', '', 'MD', 373, 259),
+(116, 'Armenia', '', '', 'AM', 374, 283),
+(117, 'Belarus', '', '', 'BY', 375, 257),
+(118, 'Andorra', '', '', 'AD', 376, 0),
+(119, 'Monaco', '', '', 'MC', 377, 0),
+(120, 'San Marino', '', '', 'SM', 378, 0),
+(121, 'Vatican', '', '', 'VA', 379, 0),
+(122, 'Ukraine', '', '', 'UA', 380, 255),
+(123, 'Serbia', '', '', 'RS', 381, 220),
+(124, 'Montenegro', '', '', 'ME', 382, 297),
+(125, 'Kosovo', '', '', 'XK', 383, 0),
+(126, 'Croatia', '', '', 'HR', 385, 0),
+(127, 'Slovenia', '', '', 'SI', 386, 293),
+(128, 'Bosnia and Herzegovina', '', '', 'BA', 387, 0),
+(129, 'Macedonia', '', '', 'MK', 389, 294),
+(130, 'Czech Republic', '', '', 'CZ', 420, 230),
+(131, 'Slovakia', '', '', 'SK', 421, 231),
+(132, 'Liechtenstein', '', '', 'LI', 423, 0),
+(133, 'Falkland Islands', '', '', 'FK', 500, 0),
+(134, 'Belize', '', '', 'BZ', 501, 0),
+(135, 'Guatemala', '', '', 'GT', 502, 0),
+(136, 'El Salvador', '', '', 'SV', 503, 0),
+(137, 'Honduras', '', '', 'HN', 504, 0),
+(138, 'Nicaragua', '', '', 'NI', 505, 0),
+(139, 'Costa Rica', '', '', 'CR', 506, 0),
+(140, 'Panama', '', '', 'PA', 507, 0),
+(141, 'Saint Pierre and Miquelon', '', '', 'PM', 508, 0),
+(142, 'Haiti', '', '', 'HT', 509, 0),
+(143, 'Guadeloupe', '', '', 'GP', 590, 0),
+(144, 'Bolivia', '', '', 'BO', 591, 0),
+(145, 'Guyana', '', '', 'GY', 592, 0),
+(146, 'Ecuador', '', '', 'EC', 593, 0),
+(147, 'French Guiana', '', '', 'GF', 594, 0),
+(148, 'Paraguay', '', '', 'PY', 595, 0),
+(149, 'Martinique', '', '', 'MQ', 596, 0),
+(150, 'Suriname', '', '', 'SR', 597, 0),
+(151, 'Uruguay', '', '', 'UY', 598, 0),
+(152, 'Curaçao', '', '', 'CW', 599, 0),
+(153, 'Timor-Leste', '', '', 'TL', 670, 0),
+(154, 'Antarctica', '', '', 'AQ', 672, 0),
+(155, 'Brunei', '', '', 'BN', 673, 0),
+(156, 'Nauru', '', '', 'NR', 674, 0),
+(157, 'Papua New Guinea', '', '', 'PG', 675, 0),
+(158, 'Tonga', '', '', 'TO', 676, 0),
+(159, 'Solomon Islands', '', '', 'SB', 677, 0),
+(160, 'Vanuatu', '', '', 'VU', 678, 0),
+(161, 'Fiji', '', '', 'FJ', 679, 0),
+(162, 'Palau', '', '', 'PW', 680, 0),
+(163, 'Wallis and Futuna', '', '', 'WF', 681, 0),
+(164, 'Cook Islands', '', '', 'CK', 682, 0),
+(165, 'Niue', '', '', 'NU', 683, 0),
+(166, 'Samoa', '', '', 'WS', 685, 0),
+(167, 'Kiribati', '', '', 'KI', 686, 0),
+(168, 'New Caledonia', '', '', 'NC', 687, 0),
+(169, 'Tuvalu', '', '', 'TV', 688, 0),
+(170, 'French Polynesia', '', '', 'PF', 689, 0),
+(171, 'Tokelau', '', '', 'TK', 690, 0),
+(172, 'Micronesia', '', '', 'FM', 691, 0),
+(173, 'Marshall Islands', '', '', 'MH', 692, 0),
+(174, 'Kazakhstan', '', '', 'KZ', 7, 401),
+(176, 'North Korea', '', '', 'KP', 850, 0),
+(177, 'Hong Kong', '', '', 'HK', 852, 454),
+(178, 'Macau', '', '', 'MO', 853, 0),
+(179, 'Cambodia', '', '', 'KH', 855, 0),
+(180, 'Laos', '', '', 'LA', 856, 0),
+(181, 'Bangladesh', '', '', 'BD', 880, 0),
+(182, 'Taiwan', '', '', 'TW', 886, 0),
+(183, 'Maldives', '', '', 'MV', 960, 0),
+(184, 'Lebanon', '', '', 'LB', 961, 0),
+(185, 'Jordan', '', '', 'JO', 962, 0),
+(186, 'Syria', '', '', 'SY', 963, 0),
+(187, 'Iraq', '', '', 'IQ', 964, 418),
+(188, 'Kuwait', '', '', 'KW', 965, 0),
+(189, 'Saudi Arabia', '', '', 'SA', 966, 420),
+(190, 'Yemen', '', '', 'YE', 967, 0),
+(191, 'Oman', '', '', 'OM', 968, 0),
+(192, 'Palestine', '', '', 'PS', 970, 0),
+(193, 'United Arab Emirates', '', '', 'AE', 971, 424),
+(194, 'Israel', '', '', 'IL', 972, 425),
+(195, 'Bahrain', '', '', 'BH', 973, 0),
+(196, 'Qatar', '', '', 'QA', 974, 0),
+(197, 'Bhutan', '', '', 'BT', 975, 0),
+(198, 'Mongolia', '', '', 'MN', 976, 0),
+(199, 'Nepal', '', '', 'NP', 977, 0),
+(200, 'Iran', '', '', 'IR', 98, 432),
+(201, 'Tajikistan', '', '', 'TJ', 992, 436),
+(202, 'Turkmenistan', '', '', 'TM', 993, 0),
+(203, 'Azerbaijan', '', '', 'AZ', 994, 400),
+(204, 'Georgia', '', '', 'GE', 995, 282),
+(205, 'Kyrgyzstan', '', '', 'KG', 996, 437),
+(206, 'Uzbekistan', '', '', 'UZ', 998, 434),
+(207, NULL, 'International Toll Free', '.int-toll-free', '', 800, 0),
+(208, '', 'Inmarsat', '.inmarsat', '', 870, 0),
+(209, '', 'Inmarsat (East Atlantic)', '.inmarsat-atlantic-east', '', 871, 0),
+(210, '', 'Inmarsat (Pacific)', '.inmarsat-pacific', '', 872, 0),
+(211, '', 'Inmarsat (Indian Ocean)', '.inmarsat-indian-ocean', '', 873, 0),
+(212, '', 'Inmarsat (West Atlantic)', '.inmarsat-atlantic-west', '', 874, 0),
+(213, NULL, 'International Shared Cost Service (ISCS)', '.int-shared-cost', '', 808, 0),
+(214, '', 'Global Mobile Satellite System', '.gmss', '', 881, 0),
+(215, '', 'International Networks', '.int-networks', '', 882, 0),
+(216, '', 'International Networks (alternative)', '.int-networks-alt', '', 883, 0),
+(217, '', 'National Non-commercial Purposes', '.non-commercial', '', 888, 0),
+(218, 'Congo', '', '', 'CG', 0, 630),
+(219, 'Abkhazia', '', '', 'AB', 7, 289),
+(220, 'Congo', '', '', 'CG', 242, 629),
+(221, 'Argentina', '', '', 'AR', 54, 722),
+(222, 'Canada', '', '', 'CA', 0, 310),
+(223, 'Peru', '', '', 'PE', 51, 716),
+(224, 'Dominican Republic', '', '', 'DO', 1809, 370),
+(225, 'Cote D Ivoire', '', '', 'CI', 225, 612),
+(226, 'American Samoa', '', '', 'AS', 0, 0),
+(227, 'Anguilla', '', '', 'AI', 0, 0),
+(228, 'Antigua and Barbuda', '', '', 'AG', 0, 0),
+(229, 'Bahamas', '', '', 'BS', 0, 0),
+(230, 'Barbados', '', '', 'BB', 0, 0),
+(231, 'Bermuda', '', '', 'BM', 0, 0),
+(232, 'Bonaire, Sint Eustatius and Saba', '', '', 'BQ', 0, 0),
+(233, 'Virgin Islands, British', '', '', 'VG', 0, 0),
+(234, 'Virgin Islands, U.S.', '', '', 'VI', 0, 0),
+(235, 'Guernsey', '', '', 'GG', 0, 0),
+(236, 'Grenada', '', '', 'GD', 0, 0),
+(237, 'Guam', '', '', 'GU', 0, 0),
+(238, 'Jersey', '', '', 'JE', 0, 0),
+(239, 'Dominica', '', '', 'DM', 0, 0),
+(240, 'Western Sahara', '', '', 'EH', 0, 0),
+(241, 'Cocos (Keeling) Islands', '', '', 'CC', 0, 0),
+(242, 'Cuba', '', '', 'CU', 0, 0),
+(243, 'Mayotte', '', '', 'YT', 0, 0),
+(244, 'United States Minor Outlying Isl', '', '', 'UM', 0, 0),
+(245, 'Mexico', '', '', 'MX', 0, 0),
+(246, 'Montserrat', '', '', 'MS', 0, 0),
+(247, 'Bouvet Island', '', '', 'BV', 0, 0),
+(248, 'Isle of Man', '', '', 'IM', 0, 0),
+(249, 'Norfolk Island', '', '', 'NF', 0, 0),
+(250, 'Christmas Island', '', '', 'CX', 0, 0),
+(251, 'Heard Island and McDonald Island', '', '', 'HM', 0, 0),
+(252, 'Cayman Islands', '', '', 'KY', 0, 0),
+(253, 'Turks and Caicos Islands', '', '', 'TC', 0, 0),
+(254, 'Pitcairn', '', '', 'PN', 0, 0),
+(255, 'Puerto Rico', '', '', 'PR', 0, 0),
+(256, 'Northern Mariana Islands', '', '', 'MP', 0, 0),
+(257, 'Saint Barthélemy', '', '', 'BL', 0, 0),
+(258, 'Saint Martin (French Part)', '', '', 'MF', 0, 0),
+(259, 'Saint Vincent and the Grenadines', '', '', 'VC', 0, 0),
+(260, 'Saint Kitts and Nevis', '', '', 'KN', 0, 0),
+(261, 'Saint Lucia', '', '', 'LC', 0, 0),
+(262, 'Sint Maarten', '', '', 'SX', 0, 0),
+(263, 'Trinidad and Tobago', '', '', 'TT', 0, 0),
+(264, 'French Southern Territories', '', '', 'TF', 0, 0),
+(265, 'Svalbard and Jan Mayen', '', '', 'SJ', 0, 0),
+(266, 'Åland Islands', '', '', 'AX', 0, 0),
+(267, 'South Georgia and the South Sand', '', '', 'GS', 0, 0),
+(268, 'South Ossetia', '', '', 'OS', 0, 0),
+(269, 'Jamaica', '', '', 'JM', 0, 0),
+(270, 'American Samoa', '', '', 'AS', 684, 544),
+(271, 'Andorra', '', '', 'AD', 376, 213),
+(272, 'Anguilla', '', '', 'AI', 1264, 365),
+(273, 'Antigua and Barbuda', '', '', 'AG', 1268, 344),
+(274, 'Aruba', '', '', 'AW', 297, 363),
+(275, 'Bahamas', '', '', 'BS', 1242, 364),
+(276, 'Bahrain', '', '', 'BH', 973, 426),
+(277, 'Bangladesh', '', '', 'BD', 880, 470),
+(278, 'Barbados', '', '', 'BB', 1246, 342),
+(279, 'Belize', '', '', 'BZ', 501, 702),
+(280, 'Bermuda', '', '', 'BM', 1441, 350),
+(281, 'Bhutan', '', '', 'BT', 975, 402),
+(282, 'Bolivia', '', '', 'BO', 591, 736),
+(283, 'Bosnia and Herzegovina', '', '', 'BA', 387, 218),
+(284, 'Botswana', '', '', 'BW', 267, 652),
+(285, 'British Virgin Islands', '', '', 'VG', 284, 348),
+(286, 'Brunei', '', '', 'BN', 673, 528),
+(287, 'Burundi', '', '', 'BI', 257, 642),
+(288, 'Cambodia', '', '', 'KH', 855, 456),
+(289, 'Canada', '', '', 'CA', 1, 302),
+(290, 'Cape Verde', '', '', 'CV', 238, 625),
+(291, 'Cayman Islands', '', '', 'KY', 1345, 346),
+(292, 'Chile', '', '', 'CL', 56, 730),
+(293, 'Colombia', '', '', 'CO', 57, 732),
+(294, 'Comoros', '', '', 'KM', 269, 654),
+(295, 'Cook Islands', '', '', 'CK', 682, 548),
+(296, 'Costa Rica', '', '', 'CR', 506, 712),
+(297, 'Croatia', '', '', 'HR', 385, 219),
+(298, 'Cuba', '', '', 'CU', 53, 368),
+(299, 'Democratic Republic of Congo', '', '', 'CD', 243, 630),
+(300, 'Diego Garcia', '', '', 'DG', 246, 310),
+(301, 'Djibouti', '', '', 'DJ', 253, 638),
+(302, 'Dominica', '', '', 'DM', 1767, 366),
+(303, 'East Timor', '', '', 'TL', 670, 514),
+(304, 'Ecuador', '', '', 'EC', 593, 740),
+(305, 'El Salvador', '', '', 'SV', 503, 706),
+(306, 'Equatorial Guinea', '', '', 'GQ', 240, 627),
+(307, 'Eritrea', '', '', 'ER', 291, 657),
+(308, 'Ethiopia', '', '', 'ET', 251, 636),
+(309, 'Falkland Islands', '', '', 'FK', 500, 750),
+(310, 'Faroe Islands', '', '', 'FO', 298, 288),
+(311, 'Fiji', '', '', 'FJ', 679, 542),
+(312, 'French Polynesia', '', '', 'PF', 689, 547),
+(313, 'Gabon', '', '', 'GA', 241, 628),
+(314, 'Gambia', '', '', 'GM', 220, 607),
+(315, 'Gibraltar', '', '', 'GI', 350, 266),
+(316, 'Greenland', '', '', 'GL', 299, 290),
+(317, 'Grenada', '', '', 'GD', 1473, 352),
+(318, 'Guadeloupe and Martinique and Fr', '', '', 'GF', 594, 340),
+(319, 'Guam', '', '', 'GU', 1671, 310),
+(320, 'Guatemala', '', '', 'GT', 502, 704),
+(321, 'Guinea', '', '', 'GN', 224, 611),
+(322, 'Guinea-Bissau', '', '', 'GW', 245, 632),
+(323, 'Guyana', '', '', 'GY', 592, 738),
+(324, 'Haiti', '', '', 'HT', 509, 372),
+(325, 'Honduras', '', '', 'HN', 504, 708),
+(326, 'Hungary', '', '', 'HU', 36, 216),
+(327, 'Iceland', '', '', 'IS', 354, 274),
+(328, 'India', '', '', 'IN', 91, 405),
+(329, 'International Networks', '', '', '', 882, 901),
+(330, 'Jamaica', '', '', 'JM', 1876, 338),
+(331, 'Japan', '', '', 'JP', 81, 440),
+(332, 'Jordan', '', '', 'JO', 962, 416),
+(333, 'Kiribati', '', '', 'KI', 686, 545),
+(334, 'Kosovo', '', '', 'XK', 383, 221),
+(335, 'Kuwait', '', '', 'KW', 965, 419),
+(336, 'Laos', '', '', 'LA', 856, 457),
+(337, 'Lebanon', '', '', 'LB', 961, 415),
+(338, 'Lesotho', '', '', 'LS', 266, 651),
+(339, 'Libya', '', '', 'LY', 218, 606),
+(340, 'Liechtenstein', '', '', 'LI', 423, 295),
+(341, 'Liechtenstein', '', '', 'LI', 423, 246),
+(342, 'Macao', '', '', 'MO', 853, 455),
+(343, 'Malawi', '', '', 'MW', 265, 650),
+(344, 'Malaysia', '', '', 'MY', 60, 502),
+(345, 'Maldives', '', '', 'MV', 960, 472),
+(346, 'Mali', '', '', 'ML', 223, 610),
+(347, 'Marshall Islands', '', '', 'MH', 692, 551),
+(348, 'Mauritania', '', '', 'MR', 222, 609),
+(349, 'Mauritius', '', '', 'MU', 230, 617),
+(350, 'Mayotte', '', '', 'YT', 262, 647),
+(351, 'Mexico', '', '', 'MX', 52, 334),
+(352, 'Micronesia', '', '', 'FM', 691, 550),
+(353, 'Monaco', '', '', 'MC', 377, 212),
+(354, 'Mongolia', '', '', 'MN', 976, 428),
+(355, 'Montserrat', '', '', 'MS', 1664, 354),
+(356, 'Mozambique', '', '', 'MZ', 258, 643),
+(357, 'Myanmar', '', '', 'MM', 95, 414),
+(358, 'Namibia', '', '', 'NA', 264, 649),
+(359, 'Nauru', '', '', 'NR', 674, 536),
+(360, 'Nepal', '', '', 'NP', 977, 429),
+(361, 'Netherlands Antilles', '', '', 'AN', 599, 362),
+(362, 'New Caledonia', '', '', 'NC', 687, 546),
+(363, 'New Zealand', '', '', 'NZ', 64, 530),
+(364, 'Nicaragua', '', '', 'NI', 505, 710),
+(365, 'Niger', '', '', 'NE', 227, 614),
+(366, 'Niue', '', '', 'NU', 683, 555),
+(367, 'North Korea', '', '', 'KP', 850, 467),
+(368, 'North Macedonia', '', '', 'MK', 389, 259),
+(369, 'Northern Mariana Islands', '', '', 'MP', 1670, 534),
+(370, 'Oman', '', '', 'OM', 968, 422),
+(371, 'Pakistan', '', '', 'PK', 92, 410),
+(372, 'Palau', '', '', 'PW', 680, 552),
+(373, 'Palestinian Territory', '', '', 'PS', 970, 425),
+(374, 'Panama', '', '', 'PA', 507, 714),
+(375, 'Papua New Guinea', '', '', 'PG', 675, 537),
+(376, 'Paraguay', '', '', 'PY', 595, 744),
+(377, 'Portugal', '', '', 'PT', 351, 410),
+(378, 'Puerto Rico', '', '', 'PR', 0, 330),
+(379, 'Qatar', '', '', 'QA', 974, 427),
+(380, 'Reunion', '', '', 'RE', 262, 647),
+(381, 'Rwanda', '', '', 'RW', 250, 635),
+(382, 'Saint Helena and Ascension and T', '', '', 'SH', 290, 658),
+(383, 'Saint Kitts and Nevis', '', '', 'KN', 1869, 356),
+(384, 'Saint Lucia', '', '', 'LC', 1758, 358),
+(385, 'Saint Pierre and Miquelon', '', '', 'PM', 508, 308),
+(386, 'Saint Vincent and the Grenadines', '', '', 'VC', 1784, 360),
+(387, 'Samoa', '', '', 'WS', 685, 549),
+(388, 'San Marino', '', '', 'SM', 378, 292),
+(389, 'Sao Tome and Principe', '', '', 'ST', 239, 626),
+(390, 'Satellite Networks', '', '', '', 870, 901),
+(391, 'Senegal', '', '', 'SN', 221, 608),
+(392, 'Seychelles', '', '', 'SC', 248, 633),
+(393, 'Solomon Islands', '', '', 'SB', 677, 540),
+(394, 'Somalia', '', '', 'SO', 252, 637),
+(395, 'South Africa', '', '', 'ZA', 27, 655),
+(396, 'South Korea', '', '', 'KR', 82, 450),
+(397, 'South Sudan', '', '', 'SS', 0, 659),
+(398, 'Sudan', '', '', 'SD', 249, 634),
+(399, 'Suriname', '', '', 'SR', 597, 746),
+(400, 'Swaziland', '', '', 'SZ', 268, 653),
+(401, 'Syria', '', '', 'SY', 963, 417),
+(402, 'Taiwan', '', '', 'TW', 886, 466),
+(403, 'Tonga', '', '', 'TO', 676, 539),
+(404, 'Trinidad and Tobago', '', '', 'TT', 1868, 374),
+(405, 'Turkmenistan', '', '', 'TM', 993, 438),
+(406, 'Turks and Caicos Islands', '', '', 'TC', 0, 376),
+(407, 'Tuvalu', '', '', 'TV', 0, 553),
+(408, 'United Kingdom', '', '', 'GB', 44, 234),
+(409, 'United States of America', '', '', 'US', 1, 312),
+(410, 'United States of America', '', '', 'US', 1, 313),
+(411, 'United States of America', '', '', 'US', 1, 311),
+(412, 'United States of America', '', '', 'US', 1, 314),
+(413, 'United States of America', '', '', 'US', 1, 315),
+(414, 'United States of America', '', '', 'US', 1, 316),
+(415, 'Uruguay', '', '', 'UY', 598, 748),
+(416, 'Vanuatu', '', '', 'VU', 678, 541),
+(417, 'Vatican', '', '', 'VA', 0, 225),
+(418, 'Venezuela', '', '', 'VE', 58, 734),
+(419, 'Virgin Islands', '', '', 'VI', 1340, 376),
+(420, 'Wallis and Futuna', '', '', 'WF', 0, 543),
+(421, 'Yemen', '', '', 'YE', 967, 421),
+(422, 'Zimbabwe', '', '', 'ZW', 263, 648);
+
+DROP TABLE IF EXISTS `device`;
+
+CREATE TABLE `device` (
+  `id` int NOT NULL,
+  `time_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `time_modify` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00',
+  `time_edit` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00',
+  `serial` varchar(18) NOT NULL DEFAULT '',
+  `imei` varchar(15) NOT NULL DEFAULT '',
+  `hash` varchar(32) NOT NULL DEFAULT '',
+  `token` varchar(10) NOT NULL DEFAULT '',
+  `ip` varchar(15) NOT NULL DEFAULT '',
+  `title` varchar(32) NOT NULL DEFAULT '',
+  `description` varchar(64) NOT NULL DEFAULT '',
+  `user_id` int NOT NULL DEFAULT '0',
+  `workstation_id` int NOT NULL DEFAULT '0',
+  `num` int NOT NULL DEFAULT '0',
+  `folder_id` int DEFAULT '0',
+  `model_id` int NOT NULL DEFAULT '0',
+  `version` varchar(8) NOT NULL DEFAULT '',
+  `revision` int NOT NULL DEFAULT '0',
+  `soft` int NOT NULL DEFAULT '0',
+  `memory` tinyint(1) NOT NULL DEFAULT '0',
+  `map` varchar(8) NOT NULL DEFAULT '',
+  `comment` text NOT NULL,
+  `email` varchar(64) NOT NULL DEFAULT '',
+  `data` text NOT NULL,
+  `handler_file` varchar(20) NOT NULL DEFAULT '',
+  `status` enum('free','inprogress','waiting') DEFAULT 'free',
+  `sign` varchar(16) NOT NULL DEFAULT '',
+  `off` tinyint(1) NOT NULL DEFAULT '0',
+  `pair` int NOT NULL DEFAULT '0',
+  `init` tinyint(1) NOT NULL DEFAULT '0',
+  `offline` tinyint(1) NOT NULL DEFAULT '1',
+  `cards` int NOT NULL DEFAULT '0',
+  `modems` int NOT NULL DEFAULT '0',
+  `autoresponder` int NOT NULL DEFAULT '0',
+  `autoswitching` int NOT NULL DEFAULT '0',
+  `switching_map` varchar(8) NOT NULL DEFAULT '00000000',
+  `switching` int NOT NULL DEFAULT '0',
+  `switching_timer` int NOT NULL DEFAULT '0',
+  `com` enum('none','http','socket') NOT NULL DEFAULT 'none'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 ROW_FORMAT=COMPACT;
+
+DROP TABLE IF EXISTS `device_action`;
+
+CREATE TABLE `device_action` (
+  `id` int NOT NULL,
+  `time_modify` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `time` int NOT NULL DEFAULT '0',
+  `timer` int NOT NULL DEFAULT '0',
+  `device_id` int NOT NULL DEFAULT '0',
+  `command` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 ROW_FORMAT=COMPACT;
+
+DROP TABLE IF EXISTS `device_alert`;
+
+CREATE TABLE `device_alert` (
+  `id` int NOT NULL,
+  `time_modify` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `event` varchar(16) NOT NULL DEFAULT '',
+  `sign` varchar(16) NOT NULL DEFAULT '',
+  `dev` varchar(16) NOT NULL DEFAULT '',
+  `device_id` int NOT NULL DEFAULT '0',
+  `target` varchar(16) NOT NULL DEFAULT '',
+  `value` text NOT NULL,
+  `status` varchar(16) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 ROW_FORMAT=COMPACT;
+
+DROP TABLE IF EXISTS `device_state`;
+
+CREATE TABLE `device_state` (
+  `id` int NOT NULL,
+  `time_modify` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `dev` varchar(16) NOT NULL DEFAULT '',
+  `num` int NOT NULL DEFAULT '0',
+  `name` varchar(16) NOT NULL DEFAULT '',
+  `device_id` int NOT NULL DEFAULT '0',
+  `value_string` text NOT NULL,
+  `value_int` int NOT NULL DEFAULT '0',
+  `change_timer` int NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 ROW_FORMAT=COMPACT;
+
+DROP TABLE IF EXISTS `event`;
+
+CREATE TABLE `event` (
+  `id` int NOT NULL,
+  `time_sms` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00',
+  `time_receive` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `card_id` int NOT NULL DEFAULT '0',
+  `device_id` int NOT NULL DEFAULT '0',
+  `sender` varchar(15) NOT NULL DEFAULT '',
+  `txt` text NOT NULL,
+  `status` int NOT NULL DEFAULT '0',
+  `readed` tinyint(1) NOT NULL DEFAULT '0',
+  `user_id` int NOT NULL DEFAULT '0',
+  `resend` int NOT NULL DEFAULT '0',
+  `type` enum('sms','ussd','call') NOT NULL DEFAULT 'sms',
+  `sms_id` int NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+DROP TABLE IF EXISTS `filter`;
+
+CREATE TABLE `filter` (
+  `id` int(11) NOT NULL,
+  `page` varchar(32) NOT NULL DEFAULT '',
+  `name` varchar(32) DEFAULT NULL,
+  `time_create` timestamp NOT NULL DEFAULT current_timestamp(),
+  `time_modify` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00',
+  `time_edit` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00',
+  `data` text NOT NULL,
+  `md5` varchar(32) NOT NULL DEFAULT '',
+  `user_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+INSERT INTO `filter` (`id`, `page`, `name`, `time_create`, `time_modify`, `time_edit`, `data`, `md5`, `user_id`) VALUES
+(2, 'sms', 'm', '2025-09-17 16:20:52', '2025-09-17 19:25:05', '2025-09-17 19:20:52', 'device=1&column=operator,sender,timeSms&perPage=100', '160f97352648fb2057fb7d27d1028e7a', 0),
+(3, 'sms', 'default', '2025-09-17 16:21:21', '2025-09-17 19:25:05', '2025-09-17 19:21:21', 'column=device,name,num,operator,sender,timeSms&perPage=100', 'ddc078e794faee7c4b6f8cfb24a17744', 0),
+(4, 'ussd', 'default', '2025-09-17 16:21:40', '2025-09-17 19:25:05', '2025-09-17 19:21:40', 'column=device,name,num,operator,time&perPage=100', '13c80a7a0f9ce740744fdefc577352de', 0),
+(5, 'ussd', 'm', '2025-09-17 16:21:55', '2025-09-17 19:25:05', '2025-09-17 19:21:55', 'device=1&column=operator,time&perPage=100', '13b274648c4764537e60ad93ac961f1c', 0),
+(6, 'card', 'default', '2025-09-17 16:22:26', '2025-09-17 19:25:05', '2025-09-17 19:22:26', 'column=action,balance,device,iccid,name,num,operator&perPage=300', 'deca5deca601ea103673acd476c1646c', 0),
+(7, 'card', 'm', '2025-09-17 16:22:47', '2025-09-17 19:25:05', '2025-09-17 19:22:47', 'device=1&column=balance,operator&perPage=300', 'd871baa8378c82859e146e0e67367ebc', 0),
+(8, 'online', 'default', '2025-09-17 16:24:11', '2025-09-17 19:25:05', '2025-09-17 19:24:11', 'device=1&column=balance,name,num,operator,signal', 'a8274d186df2dbee205725c9952f1796', 0),
+(9, 'online', 'm', '2025-09-17 16:24:25', '2025-09-17 19:25:05', '2025-09-17 19:24:25', 'device=1&column=signal', 'b099b054761ba470ee5b8c6489b77302', 0);
+
+DROP TABLE IF EXISTS `flag`;
+
+CREATE TABLE `flag` (
+  `id` int NOT NULL,
+  `time_modify` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `name` varchar(16) NOT NULL DEFAULT '',
+  `device_id` int NOT NULL DEFAULT '0',
+  `value_string` varchar(1000) NOT NULL,
+  `value_int` int NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 ROW_FORMAT=COMPACT;
+
+DROP TABLE IF EXISTS `link_incoming`;
+
+CREATE TABLE `link_incoming` (
+  `id` int NOT NULL,
+  `time_modify` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `device_id` int NOT NULL DEFAULT '0',
+  `sign` varchar(16) NOT NULL DEFAULT '',
+  `answer` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+DROP TABLE IF EXISTS `link_outgoing`;
+
+CREATE TABLE `link_outgoing` (
+  `id` int NOT NULL,
+  `time_modify` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `time_execute` int NOT NULL DEFAULT '0',
+  `device_id` int NOT NULL DEFAULT '0',
+  `sign` varchar(16) NOT NULL DEFAULT '',
+  `command` text NOT NULL,
+  `action` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+DROP TABLE IF EXISTS `model`;
+
+CREATE TABLE `model` (
+  `id` smallint NOT NULL,
+  `time_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `time_modify` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00',
+  `title` varchar(32) NOT NULL,
+  `family` int NOT NULL,
+  `model` int NOT NULL DEFAULT '0',
+  `description` text NOT NULL,
+  `icon` varchar(32) NOT NULL DEFAULT '',
+  `manufacturer_id` int NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+INSERT INTO `model` (`id`, `time_create`, `time_modify`, `title`, `family`, `model`, `description`, `icon`, `manufacturer_id`) VALUES
+(1, '2023-08-08 17:34:41', '2023-10-31 18:00:35', 'SR-1640', 1, 1, '', 'sr-1640.svg', 1),
+(21, '2023-08-08 17:34:41', '2023-10-31 17:59:23', 'SR-Nano-500', 2, 21, '', 'sr-nano.svg', 1),
+(22, '2023-08-08 17:34:41', '2023-10-31 18:00:09', 'SR-Nano-1000', 2, 22, '', 'sr-nano.svg', 1),
+(31, '2023-08-08 17:34:41', '2023-10-31 17:59:23', 'SR-Train', 3, 31, '', 'sr-train.svg', 1),
+(32, '2023-08-08 17:34:41', '2023-10-31 17:59:23', 'SR-Train-8', 3, 32, '', 'sr-train.svg', 1),
+(41, '2023-08-08 17:34:41', '2023-10-31 17:59:23', 'SR-Box-8', 4, 41, '', 'sr-box.svg', 1),
+(42, '2023-08-08 17:34:41', '2023-10-31 17:59:23', 'SR-Box-8-Voice', 4, 42, '', 'sr-box.svg', 1),
+(43, '2023-08-08 17:34:41', '2023-10-31 17:59:23', 'SB-Box-2', 4, 43, '', 'sr-box.svg', 1),
+(51, '2023-08-08 17:34:41', '2023-10-31 17:59:23', 'SR-Organizer-16-Classic', 5, 51, '', 'sr-organizer-16.svg', 1),
+(52, '2023-08-08 17:34:41', '2023-10-31 17:59:23', 'SR-Organizer-16', 5, 52, '', 'sr-organizer-16.svg', 1),
+(55, '2023-08-08 17:34:41', '2023-10-31 17:59:23', 'SR-Organizer-24-3', 5, 55, '', 'sr-organizer-24-3.svg', 1),
+(56, '2023-08-08 17:34:41', '2023-10-31 17:59:23', 'SR-Organizer-24-1', 5, 56, '', 'sr-organizer-24-1.svg', 1),
+(57, '2024-07-02 19:36:20', '2024-07-02 23:19:27', 'SR-Organizer-24-1-3G', 5, 57, '', 'sr-organizer-24-3G.svg', 1),
+(58, '2024-07-02 19:36:20', '2024-07-02 23:19:27', 'SR-Organizer-32-1-3G', 5, 58, '', 'sr-organizer-32-3G.svg', 0),
+(81, '2023-08-08 17:34:41', '2024-07-17 12:34:52', 'SR-Board-Old', 8, 81, '', 'sr-board.svg', 1),
+(82, '2023-08-08 17:34:41', '2024-07-17 12:35:04', 'SR-Board', 8, 82, '', 'sr-board.svg', 1),
+(85, '2023-08-08 17:34:41', '2024-02-13 13:02:09', 'SR-Board-3G', 8, 85, '', 'sr-board.svg', 1),
+(87, '2023-08-08 17:34:41', '2024-02-13 13:02:09', 'SR-Board-4G', 8, 87, '', 'sr-board.svg', 1);
+
+DROP TABLE IF EXISTS `name`;
+
+CREATE TABLE `name` (
+  `id` smallint NOT NULL,
+  `name` varchar(32) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+INSERT INTO `name` (`id`, `name`) VALUES
+(72, 'Aegaeon'),
+(70, 'Anthe'),
+(28, 'Ariel'),
+(60, 'Atlas'),
+(55, 'Belinda'),
+(50, 'Bianca'),
+(56, 'Caliban'),
+(15, 'Callisto'),
+(65, 'Calypso'),
+(19, 'Ceres'),
+(23, 'Charon'),
+(51, 'Cordelia'),
+(54, 'Cressida'),
+(69, 'Daphnis'),
+(33, 'Deimos'),
+(52, 'Desdemona'),
+(39, 'Despina'),
+(24, 'Dione'),
+(11, 'Earth'),
+(17, 'Enceladus'),
+(59, 'Epimetheus'),
+(21, 'Eris'),
+(13, 'Europa'),
+(14, 'Ganymede'),
+(20, 'Haumea'),
+(66, 'Helene'),
+(45, 'Hydra'),
+(35, 'Hyperion'),
+(26, 'Iapetus'),
+(58, 'Janus'),
+(48, 'Juliet'),
+(5, 'Jupiter'),
+(44, 'Kerberos'),
+(40, 'Larissa'),
+(22, 'Makemake'),
+(4, 'Mars'),
+(8, 'Mercury'),
+(67, 'Methone'),
+(36, 'Mimas'),
+(27, 'Miranda'),
+(3, 'Moon'),
+(37, 'Naiad'),
+(9, 'Neptune'),
+(1, 'New'),
+(43, 'Nix'),
+(31, 'Oberon'),
+(49, 'Ophelia'),
+(71, 'Pallene'),
+(63, 'Pan'),
+(62, 'Pandora'),
+(32, 'Phobos'),
+(12, 'Pluto'),
+(68, 'Polydeuces'),
+(47, 'Portia'),
+(61, 'Prometheus'),
+(41, 'Proteus'),
+(46, 'Puck'),
+(25, 'Rhea'),
+(53, 'Rosalind'),
+(7, 'Saturn'),
+(42, 'Styx'),
+(2, 'Sun'),
+(57, 'Sycorax'),
+(64, 'Telesto'),
+(34, 'Tethys'),
+(38, 'Thalassa'),
+(16, 'Titan'),
+(30, 'Titania'),
+(18, 'Triton'),
+(29, 'Umbriel'),
+(10, 'Uranus'),
+(6, 'Venus');
+
+DROP TABLE IF EXISTS `operator`;
+
+CREATE TABLE `operator` (
+  `id` int NOT NULL,
+  `time_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `time_modify` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00',
+  `time_edit` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00',
+  `title` varchar(32) NOT NULL,
+  `alt` varchar(32) NOT NULL DEFAULT '',
+  `description` varchar(32) NOT NULL DEFAULT '',
+  `color` varchar(6) NOT NULL DEFAULT '',
+  `prefix` varchar(6) NOT NULL DEFAULT '',
+  `size` tinyint(1) NOT NULL DEFAULT '0',
+  `get_number` varchar(32) NOT NULL,
+  `get_number_type` enum('ussd','sms','both','none') NOT NULL DEFAULT 'none',
+  `get_balance` varchar(32) NOT NULL,
+  `get_balance_type` enum('ussd','sms','both','none') NOT NULL DEFAULT 'none',
+  `imsi` int NOT NULL DEFAULT '0',
+  `country_id` int NOT NULL DEFAULT '0',
+  `user_id` int NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+INSERT INTO `operator` (`id`, `time_create`, `time_modify`, `time_edit`, `title`, `alt`, `description`, `color`, `prefix`, `size`, `get_number`, `get_number_type`, `get_balance`, `get_balance_type`, `imsi`, `country_id`, `user_id`) VALUES
+(162, '2025-02-06 12:43:13', '2025-02-21 09:41:48', '2025-02-18 19:38:13', 'MTS', '', '', 'FF0000', '79', 11, '*111*0887#', 'sms', '*100#', 'ussd', 25001, 2, 0),
+(163, '2025-02-06 12:43:13', '2025-05-13 11:41:50', '2025-04-01 11:56:33', 'Megafon', '', '', '00b32d', '79', 11, '*205#', 'ussd', '*100#', 'both', 25002, 2, 0),
+(164, '2025-02-06 12:43:13', '2025-05-13 11:41:50', '2025-02-06 12:43:13', 'ETK', '', '', '3b04f8', '79', 11, '', 'none', '', 'none', 25005, 2, 0),
+(165, '2025-02-06 12:43:13', '2025-05-13 11:41:50', '2025-02-06 12:43:13', 'Скайлинк', '', '', 'b97743', '79', 11, '', 'none', '', 'none', 25006, 2, 0),
+(166, '2025-02-06 12:43:13', '2025-05-13 11:41:50', '2025-02-06 12:43:13', 'CMAPTC', '', '', '1480ad', '79', 11, '', 'none', '', 'none', 25007, 2, 0),
+(167, '2025-02-06 12:43:13', '2025-05-13 11:41:50', '2025-02-06 12:43:13', 'Скайлинк', 'Skylink', '', 'b97743', '79', 11, '', 'none', '', 'none', 25009, 2, 0),
+(168, '2025-02-06 12:43:13', '2025-02-21 09:41:49', '2025-02-18 19:45:31', 'Yota', '', '', '00aeef', '79', 11, '*103#', 'ussd', '*100#', 'ussd', 25011, 2, 0),
+(169, '2025-02-06 12:43:13', '2025-05-13 11:41:50', '2025-02-06 12:43:13', 'Байкалвестком', 'Tele2', '', '1c25c2', '79', 11, '', 'none', '', 'none', 25012, 2, 0),
+(170, '2025-02-06 12:43:13', '2025-05-13 11:41:50', '2025-02-06 12:43:13', 'Kyбань GSM', '', '', 'de1444', '79', 11, '', 'none', '', 'none', 25013, 2, 0),
+(171, '2025-02-06 12:43:13', '2025-05-13 11:41:50', '2025-02-06 12:43:13', 'CMAPTC', '', '', '1480ad', '79', 11, '', 'none', '', 'none', 25015, 2, 0),
+(172, '2025-02-06 12:43:13', '2025-05-13 11:41:50', '2025-02-06 12:43:13', 'HTK', '', '', '1be10f', '79', 11, '', 'none', '', 'none', 25016, 2, 0),
+(173, '2025-02-06 12:43:13', '2025-05-13 11:41:50', '2025-02-06 12:43:13', 'IOren', '', '', '062f04', '79', 11, '', 'none', '', 'none', 25017, 2, 0),
+(174, '2025-02-06 12:43:13', '2025-02-18 19:34:17', '2025-02-18 19:34:17', 'T2', '', '', '000000', '7', 11, '*201#', 'both', '*105#', 'ussd', 25019, 2, 0),
+(175, '2025-02-06 12:43:13', '2025-02-21 09:41:49', '2025-02-18 19:34:36', 'T2', 'Tele2', '', '000000', '79', 11, '*201#', 'both', '*105#', 'ussd', 25020, 2, 0),
+(176, '2025-02-06 12:43:13', '2025-05-13 11:41:50', '2025-02-06 12:43:13', 'ВТБ Мобайл', '', '', '061560', '79', 11, '', 'none', '', 'none', 25026, 2, 0),
+(177, '2025-02-06 12:43:13', '2025-05-13 11:41:50', '2025-02-06 12:43:13', 'Letai', '', '', 'd6a490', '79', 11, '', 'none', '', 'none', 25027, 2, 0),
+(178, '2025-02-06 12:43:13', '2025-05-13 11:41:50', '2025-02-06 12:43:13', 'Win', '', '', '119eac', '79', 11, '', 'none', '', 'none', 25032, 2, 0),
+(179, '2025-02-06 12:43:13', '2025-02-21 09:41:48', '2025-02-18 19:45:47', 'Motiv', '', '', 'ec691f', '79', 11, '*110#', 'sms', '*122#', 'sms', 25035, 2, 0),
+(180, '2025-02-06 12:43:13', '2025-05-13 11:41:50', '2025-02-06 12:43:13', 'MCN Telecom', '', '', 'f67c16', '79', 11, '', 'none', '', 'none', 25037, 2, 0),
+(181, '2025-02-06 12:43:13', '2025-05-13 11:41:50', '2025-02-06 12:43:13', 'Tamб0в GSM', '', '', 'a7f078', '79', 11, '', 'none', '', 'none', 25038, 2, 0),
+(182, '2025-02-06 12:43:13', '2025-05-13 11:41:50', '2025-02-06 12:43:13', 'Ростелеком', '', '', '7700ff', '7', 11, '*110#', 'sms', '*122#', 'sms', 25039, 2, 0),
+(183, '2025-02-06 12:43:13', '2025-05-13 11:41:50', '2025-02-18 19:50:09', 'AiVaTelecom', 'MTT', '', 'FF9500', '79', 11, '', 'none', '', 'none', 25042, 2, 0),
+(184, '2025-02-06 12:43:13', '2025-05-13 11:41:50', '2025-02-06 12:43:13', 'Gazprom', '', '', '96762e', '79', 11, '', 'none', '', 'none', 25045, 2, 0),
+(185, '2025-02-06 12:43:13', '2025-05-13 11:41:50', '2025-02-06 12:43:13', 'Cим-сим', '', '', 'eddae0', '79', 11, '', 'none', '', 'none', 25047, 2, 0),
+(186, '2025-02-06 12:43:13', '2025-02-18 19:37:33', '2025-02-18 19:37:33', 'MTS', '', '', 'FF0000', '7', 11, '*111*0887#', 'sms', '*100#', 'ussd', 25050, 2, 0),
+(187, '2025-02-06 12:43:13', '2025-05-13 11:41:50', '2025-02-06 12:43:13', 'Letai', '', '', 'd6a490', '79', 11, '', 'none', '', 'none', 25054, 2, 0),
+(188, '2025-02-06 12:43:13', '2025-05-13 11:41:50', '2025-02-06 12:43:13', 'Tinkoff', '', '', 'ffdd2d', '7', 11, '*100#', 'sms', '*100#', 'sms', 25062, 2, 0),
+(189, '2025-02-06 12:43:13', '2025-02-18 19:52:02', '2025-02-18 19:52:02', '7telecom', '', '', '008FB3', '7', 11, '*222#', 'ussd', '*100#', 'ussd', 25096, 2, 0),
+(190, '2025-02-06 12:43:13', '2025-05-13 11:41:50', '2025-02-06 12:43:13', 'Feniks', '', '', '953da2', '79', 11, '', 'none', '', 'none', 25097, 2, 0),
+(191, '2025-02-06 12:43:13', '2025-02-18 19:35:35', '2025-02-18 19:35:35', 'T2', '', 'BWC', '000000', '7', 11, '*201#', 'both', '*105#', 'ussd', 25098, 2, 0),
+(192, '2025-02-06 12:43:13', '2025-02-21 09:41:48', '2025-02-18 19:47:26', 'Beeline', '', '', 'FFC900', '79', 11, '*110*10#', 'sms', '*102#', 'ussd', 25099, 2, 0),
+(1635, '2025-02-21 09:41:48', '2025-05-13 11:41:50', '2025-02-21 09:41:48', 'Antares', 'VTB', '', '0fa951', '79', 11, '', 'none', '', 'none', 250299, 2, 0),
+(1636, '2025-02-21 09:41:48', '2025-05-13 11:41:50', '2025-02-21 09:41:48', 'Global Telecom', '', '', '218b93', '79', 11, '', 'none', '', 'none', 25048, 2, 0),
+(1637, '2025-02-21 09:41:48', '2025-05-13 11:41:50', '2025-02-21 09:41:48', 'Glonass', '', '', '692ff6', '79', 11, '', 'none', '', 'none', 25055, 2, 0),
+(1638, '2025-02-21 09:41:48', '2025-05-13 11:41:50', '2025-02-21 09:41:48', 'Krymtelecom', '', '', 'd563de', '79', 11, '', 'none', '', 'none', 25034, 2, 0),
+(1639, '2025-02-21 09:41:48', '2025-05-13 11:41:50', '2025-02-21 09:41:48', 'Matrix', '', '', 'f53df0', '79', 11, '', 'none', '', 'none', 25057, 2, 0),
+(1640, '2025-02-21 09:41:49', '2025-05-13 11:41:50', '2025-02-21 09:41:49', 'SEVTELECOM', '', '', 'ac9beb', '79', 11, '', 'none', '', 'none', 25033, 2, 0),
+(1641, '2025-02-21 09:41:49', '2025-05-13 11:41:50', '2025-02-21 09:41:49', 'Glonass', '', '', '692ff6', '79', 11, '', 'none', '', 'none', 25077, 2, 0),
+(1642, '2025-02-21 09:41:49', '2025-05-13 11:41:50', '2025-02-21 09:41:49', 'Volna', '', '', '9d66ee', '79', 11, '', 'none', '', 'none', 25060, 2, 0);
+
+DROP TABLE IF EXISTS `sms`;
+
+CREATE TABLE `sms` (
+  `id` int NOT NULL,
+  `time_sms` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00',
+  `time_receive` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `card_id` int NOT NULL DEFAULT '0',
+  `device_id` int NOT NULL DEFAULT '0',
+  `sender` varchar(15) NOT NULL DEFAULT '',
+  `txt` text NOT NULL,
+  `raw` text NOT NULL,
+  `test` text NOT NULL,
+  `header` varchar(12) NOT NULL DEFAULT '',
+  `num` tinyint NOT NULL DEFAULT '0',
+  `total` tinyint(1) NOT NULL DEFAULT '1',
+  `status` int NOT NULL DEFAULT '0',
+  `readed` tinyint(1) NOT NULL DEFAULT '0',
+  `user_id` int NOT NULL DEFAULT '0',
+  `resend` int NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+DROP TABLE IF EXISTS `sms_outgoing`;
+
+CREATE TABLE `sms_outgoing` (
+  `id` int NOT NULL,
+  `time_sms` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `card_id` int NOT NULL DEFAULT '0',
+  `device_id` int NOT NULL DEFAULT '0',
+  `outgoing` varchar(15) NOT NULL DEFAULT '',
+  `txt` text NOT NULL,
+  `user_id` int NOT NULL DEFAULT '0',
+  `status` tinyint(1) NOT NULL DEFAULT '-1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+DROP TABLE IF EXISTS `task`;
+
+CREATE TABLE `task` (
+  `id` int NOT NULL,
+  `time_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `time` int NOT NULL DEFAULT '0',
+  `timer` int NOT NULL DEFAULT '0',
+  `card_id` int NOT NULL DEFAULT '0',
+  `pool_id` int NOT NULL DEFAULT '0',
+  `device_id` int NOT NULL DEFAULT '0',
+  `action` varchar(255) NOT NULL DEFAULT '',
+  `data` text NOT NULL,
+  `count` int NOT NULL DEFAULT '0',
+  `progress` int NOT NULL DEFAULT '0',
+  `status` enum('inprogress','waiting','suspension','suspended','preparing','') NOT NULL DEFAULT 'preparing',
+  `success` int NOT NULL DEFAULT '0',
+  `errors` int NOT NULL DEFAULT '0',
+  `uniq` varchar(8) NOT NULL DEFAULT '0',
+  `report` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+DROP TABLE IF EXISTS `user`;
+
+CREATE TABLE `user` (
+  `id` int NOT NULL,
+  `api_key` varchar(32) NOT NULL DEFAULT '',
+  `max` int NOT NULL DEFAULT '0',
+  `login` varchar(32) NOT NULL DEFAULT '',
+  `email` varchar(64) NOT NULL DEFAULT '',
+  `level` enum('banned','deactivated','inactive','telegram','normal','staff','editor','admin','god') NOT NULL DEFAULT 'inactive',
+  `time_modify` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `time_reg` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00',
+  `time_login` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00',
+  `pass` varchar(64) NOT NULL DEFAULT '',
+  `pass_time` int NOT NULL DEFAULT '0',
+  `ip` varchar(15) DEFAULT '',
+  `livetime` int DEFAULT NULL,
+  `notification_setup` text,
+  `timezone` int NOT NULL DEFAULT '255',
+  `timezone_manual` tinyint NOT NULL DEFAULT '0',
+  `auth_timer` int NOT NULL DEFAULT '259200',
+  `confirm` varchar(6) NOT NULL DEFAULT '',
+  `confirm_time` int NOT NULL DEFAULT '0',
+  `user_id` int DEFAULT '0',
+  `workspace` text NOT NULL,
+  `workspace_cover` varchar(255) NOT NULL DEFAULT '',
+  `pool_id` int NOT NULL DEFAULT '0',
+  `access` text NOT NULL,
+  `comment` text NOT NULL,
+  `lang` enum('none','en','es','cn','ru') NOT NULL DEFAULT 'en',
+  `userpic` varchar(255) NOT NULL DEFAULT '',
+  `cover` varchar(255) NOT NULL DEFAULT '',
+  `settings` text NOT NULL,
+  `notification` text NOT NULL,
+  `mute` text NOT NULL,
+  `limit_request` int NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+INSERT INTO `user` (`id`, `api_key`, `max`, `login`, `email`, `level`, `time_modify`, `time_reg`, `time_login`, `pass`, `pass_time`, `ip`, `livetime`, `notification_setup`, `timezone`, `timezone_manual`, `auth_timer`, `confirm`, `confirm_time`, `user_id`, `workspace`, `workspace_cover`, `pool_id`, `access`, `comment`, `lang`, `userpic`, `cover`, `settings`, `notification`, `mute`, `limit_request`) VALUES
+(1, '', 0, 'admin', '', 'god', '2025-01-01 00:00:00', '2025-01-01 00:00:00', '2025-01-01 00:00:00', 'd82494f05d6917ba02f7aaa29689ccb444bb73f20380876cb05d1f37537b7892', 0, '', 0, 'a:7:{s:12:\"placement_ok\";i:1;s:15:\"placement_error\";i:1;s:17:\"placement_comment\";i:0;s:6:\"balans\";i:1;s:9:\"plan_done\";i:1;s:7:\"comment\";i:1;s:6:\"reward\";i:1;}', 0, 0, 259200, '', 0, 0, '', '', 0, '', '', 'ru', '', '', 'a:1:{s:4:\"show\";N;}', 'a:3:{s:3:\"url\";a:11:{s:3:\"url\";s:8:\"https://\";s:6:\"online\";i:0;s:7:\"offline\";i:0;s:12:\"ussdReceived\";i:0;s:11:\"smsReceived\";i:0;s:9:\"smsSended\";i:0;s:12:\"callIncoming\";i:0;s:9:\"callBegin\";i:0;s:7:\"callEnd\";i:0;s:9:\"simStatus\";i:0;s:12:\"callOutgoing\";i:0;}s:4:\"mail\";a:10:{s:6:\"online\";i:0;s:7:\"offline\";i:0;s:12:\"ussdReceived\";i:0;s:11:\"smsReceived\";i:0;s:9:\"smsSended\";i:0;s:12:\"callIncoming\";i:0;s:9:\"callBegin\";i:0;s:7:\"callEnd\";i:0;s:9:\"simStatus\";i:0;s:12:\"callOutgoing\";i:0;}s:8:\"telegram\";a:10:{s:6:\"online\";i:1;s:7:\"offline\";i:1;s:12:\"ussdReceived\";i:0;s:11:\"smsReceived\";i:0;s:9:\"smsSended\";s:1:\"1\";s:12:\"callIncoming\";i:0;s:9:\"callBegin\";i:1;s:7:\"callEnd\";i:1;s:9:\"simStatus\";i:0;s:12:\"callOutgoing\";i:1;}}', 'a:5:{s:5:\"sound\";s:1:\"0\";s:5:\"alert\";s:1:\"0\";s:3:\"sms\";s:1:\"0\";s:5:\"click\";s:1:\"0\";s:9:\"attention\";s:1:\"0\";}', 0);
+
+DROP TABLE IF EXISTS `user_ip`;
+
+CREATE TABLE `user_ip` (
+  `id` int NOT NULL,
+  `ip` varchar(15) DEFAULT '',
+  `time` int DEFAULT '0',
+  `count` int NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+DROP TABLE IF EXISTS `ussd`;
+
+CREATE TABLE `ussd` (
+  `id` int NOT NULL,
+  `time_receive` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `card_id` int NOT NULL DEFAULT '0',
+  `device_id` int NOT NULL DEFAULT '0',
+  `txt` varchar(255) NOT NULL DEFAULT '',
+  `readed` tinyint(1) NOT NULL DEFAULT '0',
+  `user_id` int NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+ALTER TABLE `call_incoming`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `time` (`time_receive`),
+  ADD KEY `incoming` (`incoming`),
+  ADD KEY `device_id` (`device_id`),
+  ADD KEY `card_id` (`card_id`),
+  ADD KEY `user_id` (`user_id`) USING BTREE,
+  ADD KEY `readed` (`readed`),
+  ADD KEY `notify` (`notify`),
+  ADD KEY `answer` (`time_answer`),
+  ADD KEY `hangup` (`time_hangup`),
+  ADD KEY `done` (`status`),
+  ADD KEY `idx_call_incoming_card_time` (`card_id`,`time_receive`);
+
+ALTER TABLE `call_outgoing`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `time` (`time_call`),
+  ADD KEY `incoming` (`outgoing`),
+  ADD KEY `device_id` (`device_id`),
+  ADD KEY `card_id` (`card_id`),
+  ADD KEY `user_id` (`user_id`) USING BTREE,
+  ADD KEY `readed` (`readed`),
+  ADD KEY `done` (`status`),
+  ADD KEY `time_hangup` (`time_hangup`);
+
+ALTER TABLE `card`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `place` (`place`) USING BTREE,
+  ADD KEY `title` (`title`),
+  ADD KEY `number` (`number`),
+  ADD KEY `iccid` (`iccid`),
+  ADD KEY `balance` (`balance`),
+  ADD KEY `last_balance` (`last_balance`),
+  ADD KEY `time_create` (`time_create`) USING BTREE,
+  ADD KEY `time_modify` (`time_modify`),
+  ADD KEY `time_edit` (`time_edit`),
+  ADD KEY `time_number` (`time_number`),
+  ADD KEY `time_balance` (`time_balance`),
+  ADD KEY `time_lastbalance` (`time_lastbalance`),
+  ADD KEY `time_sms` (`time_sms`),
+  ADD KEY `roaming` (`roaming`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `status` (`status`),
+  ADD KEY `operator_id` (`operator_id`),
+  ADD KEY `hidden` (`hidden`),
+  ADD KEY `user_id_2` (`user_id`,`place`),
+  ADD KEY `user_id_3` (`user_id`,`device_id`,`place`),
+  ADD KEY `trouble` (`trouble`),
+  ADD KEY `imsi` (`imsi`),
+  ADD KEY `idx_card_user_locked_index` (`user_id`);
+
+ALTER TABLE `country`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `domain` (`domain`),
+  ADD KEY `title` (`title`);
+
+ALTER TABLE `device`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `title` (`title`),
+  ADD KEY `time_create` (`time_create`) USING BTREE,
+  ADD KEY `time_modify` (`time_modify`),
+  ADD KEY `time_edit` (`time_edit`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `version` (`version`),
+  ADD KEY `model_id` (`model_id`),
+  ADD KEY `token_remote` (`token`),
+  ADD KEY `serial` (`serial`),
+  ADD KEY `pair` (`pair`),
+  ADD KEY `num` (`num`),
+  ADD KEY `hash` (`hash`),
+  ADD KEY `switching_timer` (`switching_timer`),
+  ADD KEY `imei` (`imei`),
+  ADD KEY `switching_map` (`switching_map`) USING BTREE;
+
+ALTER TABLE `device_action`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `time_modify` (`time_modify`),
+  ADD KEY `device_id` (`device_id`) USING BTREE,
+  ADD KEY `timer` (`timer`);
+
+ALTER TABLE `device_alert`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `time_modify` (`time_modify`),
+  ADD KEY `device_id` (`device_id`) USING BTREE,
+  ADD KEY `dev` (`dev`),
+  ADD KEY `sign` (`sign`),
+  ADD KEY `status` (`status`),
+  ADD KEY `target` (`target`);
+
+ALTER TABLE `device_state`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `combo` (`device_id`,`dev`,`num`,`name`),
+  ADD KEY `time_modify` (`time_modify`),
+  ADD KEY `name` (`name`) USING BTREE,
+  ADD KEY `device_id` (`device_id`) USING BTREE,
+  ADD KEY `dev` (`dev`),
+  ADD KEY `num` (`num`);
+
+ALTER TABLE `event`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `time` (`time_sms`),
+  ADD KEY `sender` (`sender`),
+  ADD KEY `readed` (`readed`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `time_receive` (`time_receive`),
+  ADD KEY `card_id` (`card_id`),
+  ADD KEY `device_id` (`device_id`),
+  ADD KEY `resend` (`resend`),
+  ADD KEY `status` (`status`),
+  ADD KEY `status_2` (`status`,`card_id`,`time_receive`),
+  ADD KEY `type` (`type`),
+  ADD KEY `sms_id` (`sms_id`);
+
+ALTER TABLE `filter`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `name` (`name`,`page`,`user_id`),
+  ADD UNIQUE KEY `md5` (`md5`,`user_id`),
+  ADD KEY `time_create` (`time_create`),
+  ADD KEY `page` (`page`);
+
+ALTER TABLE `flag`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `combo` (`device_id`,`name`),
+  ADD KEY `time_modify` (`time_modify`),
+  ADD KEY `name` (`name`) USING BTREE,
+  ADD KEY `device_id` (`device_id`) USING BTREE;
+
+ALTER TABLE `link_incoming`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `device_id` (`device_id`) USING BTREE,
+  ADD KEY `uniq` (`device_id`,`sign`) USING BTREE;
+
+ALTER TABLE `link_outgoing`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `device` (`device_id`),
+  ADD KEY `sign` (`sign`),
+  ADD KEY `time_execute` (`time_execute`);
+
+ALTER TABLE `model`
+  ADD PRIMARY KEY (`id`) USING BTREE,
+  ADD UNIQUE KEY `title` (`title`),
+  ADD KEY `family` (`family`);
+
+ALTER TABLE `name`
+  ADD PRIMARY KEY (`id`) USING BTREE,
+  ADD UNIQUE KEY `title` (`name`);
+
+ALTER TABLE `operator`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `country_id` (`country_id`),
+  ADD KEY `title` (`title`) USING BTREE,
+  ADD KEY `user_id` (`user_id`);
+
+ALTER TABLE `sms`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `time` (`time_sms`),
+  ADD KEY `sender` (`sender`),
+  ADD KEY `readed` (`readed`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `header` (`header`),
+  ADD KEY `time_receive` (`time_receive`),
+  ADD KEY `card_id` (`card_id`),
+  ADD KEY `device_id` (`device_id`),
+  ADD KEY `resend` (`resend`),
+  ADD KEY `status` (`status`),
+  ADD KEY `status_2` (`status`,`card_id`,`time_receive`);
+
+ALTER TABLE `sms_outgoing`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `sender` (`outgoing`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `time_receive` (`time_sms`),
+  ADD KEY `card_id` (`card_id`),
+  ADD KEY `device_id` (`device_id`),
+  ADD KEY `status` (`status`);
+
+ALTER TABLE `task`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `time_create` (`time_create`),
+  ADD KEY `card_id` (`card_id`),
+  ADD KEY `pool_id` (`pool_id`),
+  ADD KEY `device_id` (`device_id`);
+
+ALTER TABLE `user`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `api_key` (`api_key`),
+  ADD KEY `login` (`login`) USING BTREE,
+  ADD KEY `user_id` (`user_id`) USING BTREE,
+  ADD KEY `email` (`email`) USING BTREE;
+
+ALTER TABLE `user_ip`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `ip` (`ip`);
+
+ALTER TABLE `ussd`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `readed` (`readed`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `time_receive` (`time_receive`),
+  ADD KEY `card_id` (`card_id`),
+  ADD KEY `device_id` (`device_id`),
+  ADD KEY `card_id_2` (`card_id`,`time_receive`);
+
+ALTER TABLE `call_incoming`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `call_outgoing`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `card`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `country`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=423;
+
+ALTER TABLE `device`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `device_action`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `device_alert`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `device_state`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `event`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `filter`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `flag`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `link_incoming`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `link_outgoing`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `model`
+  MODIFY `id` smallint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
+
+ALTER TABLE `name`
+  MODIFY `id` smallint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=73;
+
+ALTER TABLE `operator`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2339;
+
+ALTER TABLE `sms`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `sms_outgoing`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `task`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `user`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+ALTER TABLE `user_ip`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `ussd`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+COMMIT;

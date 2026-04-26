@@ -1,0 +1,2 @@
+<?php
+ goto J__Hw; eAKUv: if (!cnt($response)) { $response = ["\163\x74\141\x74\x75\x73" => "\x73\165\143\x63\x65\x73\163"]; } goto OxsV0; eJSwj: $response = ["\x73\164\141\164\165\163" => "\x65\162\x72\x6f\x72"]; goto yRyei; GAfcN: $_POST["\154\157\147\x69\x6e"] = $_POST["\165\x73\x65\162\156\x61\155\145"]; goto Wfsh0; Wfsh0: $response = loginTest(); goto eAKUv; J__Hw: $json = file_get_contents("\x70\150\x70\x3a\57\57\151\156\160\x75\x74"); goto eJSwj; yRyei: $_POST = json_decode($json, true); goto GAfcN; OxsV0: echo json_encode($response);

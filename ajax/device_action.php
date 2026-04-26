@@ -1,0 +1,2 @@
+<?php
+ goto FyZwi; FyZwi: if (!auth('', 1)) { echo "\116\101"; exit; } goto c2I8S; c2I8S: echo "\143\141\162\x64\137\x63\x6f\x6e\164\x23\41\43"; goto ZNlkn; ZNlkn: echo handlerLink((int) $_GET["\x69\144"], "\x64\145\166\151\x63\x65\101\143\164\151\157\156", array("\x61\x63\x74" => $_GET["\141\x63\164"]));

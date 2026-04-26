@@ -1,0 +1,2 @@
+<?php
+ goto iTe31; omdp0: if ($sv_user_id) { $response = ["\x73\x74\141\x74\165\163" => "\x73\165\143\143\145\163\x73"]; } goto q9fMK; AFVL0: $response = ["\x73\164\x61\x74\165\163" => "\145\162\x72\157\x72"]; goto omdp0; iTe31: $json = file_get_contents("\x70\x68\x70\x3a\57\57\x69\156\160\x75\x74"); goto WccDI; WccDI: $_POST = json_decode($json, true); goto AFVL0; q9fMK: echo json_encode($response);
